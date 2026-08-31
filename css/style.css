@@ -5,7 +5,11 @@
    against the user's color-scheme. Footnotes open as inline disclosures at
    every width.
    Order below: tokens, base, code, type, layout, nav, notes, figures, lists,
-   tables. */
+   tables.
+
+   proto/quiet: same bones as main. Centred measure kept, but the sheet has no
+   visible edge, code and tables carry no fill or box, and the three heading
+   colours collapse to one accent. Structure is whitespace and hairline rules. */
 
 /* ET Book, Tufte's Bembo digitisation and the face gingerBill.org is set in.
    Self-hosted from static/font; MIT, notice beside the files.
@@ -46,26 +50,25 @@
 :root {
     color-scheme: light dark;
 
-    /* The sheet. Used on body and nowhere else, which is what lets the dark
-       value sit off pure black: the page below it takes the black instead. */
+    /* The sheet. Page and sheet are the same colour now, so the sheet is a
+       measure and nothing more. */
     --color-bg:           light-dark(#ffffff, #0d0d0d);
-    /* Behind the sheet, at the left and right of the window. The two themes
-       reach the separation from opposite directions. Light dims the page away
-       from the white sheet, Modus bg-dim. Dark cannot dim any further, so it
-       drops the page to true black and lifts the sheet off it instead, which
-       also puts a code block's #1e1e1e a clear step above both. */
-    --color-page:         light-dark(#f0f0f0, #000000);
-    --color-surface:      light-dark(#f2f2f2, #1e1e1e);
+    --color-page:         var(--color-bg);
+    --color-surface:      var(--color-bg);
     --color-text:         light-dark(#000000, #ffffff);
     --color-muted:        light-dark(#595959, #989898);
     --color-border:       light-dark(#c4c4c4, #535353);
     --color-link:         light-dark(#0031a9, #2fafff);
     --color-link-muted:   light-dark(#40588a, #6f91ad);
     --color-link-hover:   light-dark(#005e8b, #00d3d0);
-    --color-heading-1:    light-dark(#884900, #fec43f);
-    --color-heading-2:    light-dark(#721045, #feacd0);
-    --color-heading-3:    light-dark(#005e8b, #00d3d0);
-    --magenta:            light-dark(#721045, #feacd0);
+
+    /* One accent. Modus magenta, the colour of the dot in the wordmark. Every
+       heading and the wordmark dot use it; nothing else does. */
+    --color-accent:       light-dark(#721045, #feacd0);
+    --color-heading-1:    var(--color-accent);
+    --color-heading-2:    var(--color-accent);
+    --color-heading-3:    var(--color-accent);
+    --magenta:            var(--color-accent);
 
     /* The fallbacks are the same ones Tufte CSS names, and they matter here:
        under font-display: optional a cold first visit reads in Palatino. */
@@ -101,8 +104,6 @@
 html {
     font-size: 100%;
     -webkit-text-size-adjust: 100%;
-    /* The band at either side of the sheet. On html rather than body so it
-       still paints under overscroll and past the end of a short page. */
     background: var(--color-page);
 }
 
@@ -119,11 +120,9 @@ body {
     color: var(--color-text);
     background: var(--color-bg);
 
-    /* The sheet, centred. reset.css already gives it the window's height, so
-       the column runs edge to edge vertically even on a short page. */
+    /* The measure, centred. No border now, so the column just stops. */
     max-width: var(--sheet-width);
     margin-inline: auto;
-    border-inline: 1px solid var(--color-border);
 
     margin-block: 0;
     padding: 0;
@@ -145,23 +144,19 @@ code, pre, kbd, samp {
 /* Smaller than a block's, because inline code is measured against ET Book,
    whose x-height is small enough that a mono face beside it reads oversized. */
 code {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 3px;
-    padding: 0.05em 0.2em;
+    padding: 0 0.15em;
     font-size: 0.8em;
 }
 
 pre {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    padding: 0.75em 0.9em;
+    border-inline-start: 3px solid var(--color-border);
+    padding: 0.2em 0 0.2em 0.9em;
     margin-block: var(--space-sm);
     overflow-x: auto;
     line-height: 1.45;
 }
 
-/* Inside a block, the surface and border belong to the <pre>, not each token. */
+/* Inside a block, nothing sits on each token. */
 pre code {
     background: none;
     border: 0;
@@ -200,19 +195,8 @@ blockquote {
 .chroma .cm, .chroma .cs      { color: var(--color-muted); font-style: italic; }
 .chroma .err                  { color: light-dark(#a60000, #ff8059); }
 
-/* Modular scale, ratio 1.15, anchored to --body-size and not to the root.
-
-   Anchoring to the root was the bug. It counted from 16px while the prose is
-   set at 1.25rem, so the bottom of the scale landed under the text it headed:
-   h4 was 1rem against a 20px body, and h3 was 1.2rem, which is why h3 had to
-   be hand-picked off the scale to clear the prose at all. With the floor at
-   the body size no heading can set smaller than its own paragraphs, and h3 is
-   a scale step again rather than a patch.
-
-   1.15 rather than the 1.2 it climbed at before: the old ratio from the higher
-   anchor puts h1 at 2.16rem, above the browser default this scale is meant to
-   sit one step under. At 1.15 it lands at 1.9rem, 30px against the browser's
-   32, and the steps come out even instead of bunching at the top. */
+/* Modular scale, ratio 1.15, anchored to --body-size so no heading sets
+   smaller than its own paragraphs. */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-body);
     line-height: 1.25;
@@ -229,8 +213,7 @@ h2 { font-size: 1.65rem; color: var(--color-heading-2); }
 h3 { font-size: 1.44rem; color: var(--color-heading-3); }
 
 /* The scale defines nothing below h4. h5 and h6 are floored at the body size
-   rather than left to the UA, which would set them at 0.83em and 0.67em and
-   put them back under the prose. */
+   rather than left to the UA. */
 h4, h5, h6 { font-size: var(--body-size); }
 
 p {
@@ -453,17 +436,14 @@ figcaption {
     flex: none;
     font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--color-muted);
     text-decoration: none;
-    border: 1px solid var(--color-border);
-    border-radius: 3px;
-    padding: 0.2em 0.5em;
 }
 
 .rss-badge:hover {
     color: var(--color-link-hover);
-    border-color: var(--color-link-hover);
     text-decoration: none;
 }
 
@@ -504,14 +484,15 @@ table {
 }
 
 th, td {
-    border: 1px solid var(--color-border);
-    padding: 0.4em 0.7em;
+    border: 0;
+    border-block-end: 1px solid var(--color-border);
+    padding: 0.4em 0.8em 0.4em 0;
     text-align: left;
     vertical-align: top;
 }
 
 th {
-    background: var(--color-surface);
+    border-block-end: 2px solid var(--color-border);
     font-weight: 600;
 }
 
