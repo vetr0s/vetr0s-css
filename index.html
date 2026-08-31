@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vetr0s.css</title>
+<script>
+  (function () {
+    var theme = localStorage.getItem('theme');
+    if (theme === 'light' || theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+  })();
+</script>
+<link rel="preload" href="/font/et-book-roman-line-figures.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/reset.css">
+<link rel="stylesheet" href="/css/style.css">
+<script src="/js/theme.js" defer></script>
+</head>
+<body>
+<header>
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <p class="trail"><a href="#">vetr0s<span class="accent">.</span>css</a><span class="sep">/</span><span class="here">specimen</span></p>
+    <button id="theme-toggle" type="button" aria-label="Toggle color theme">theme</button>
+  </nav>
+</header>
+<main>
+  <article>
+    <h1>Type, color, and measure</h1>
+    <time datetime="2026-08-30">August 30, 2026</time>
+    <p>This page exercises the selectors used by the site. Refine the CSS here, then review both themes and a narrow viewport.</p>
+    <p>Body copy includes an <a href="#links">ordinary link</a>, <em>italic text</em>, <strong>bold text</strong>, and <code>inline code</code>.</p>
+
+    <h2 id="links">Article elements</h2>
+    <blockquote><p>A block quote needs enough text to show its inset, border, color, and line length.</p></blockquote>
+    <ul>
+      <li>An unordered list item</li>
+      <li>A second item with a longer line for wrapping behavior</li>
+    </ul>
+    <ol>
+      <li>A numbered list item</li>
+      <li>Another numbered item</li>
+    </ol>
+
+    <h3>Inline disclosure</h3>
+    <p>The note marker opens its content in place.<input class="margin-toggle" id="sn-1" type="checkbox"><label class="sidenote-number" for="sn-1"></label><span class="sidenote">This is the note text. It can contain an <a href="#links">internal link</a>.</span></p>
+
+    <h3>Code</h3>
+    <pre class="chroma"><code><span class="k">const</span> <span class="nf">greeting</span> = <span class="s">"hello"</span>;
+<span class="c">// Syntax colors follow the active theme.</span></code></pre>
+
+    <h3>Table</h3>
+    <table>
+      <thead><tr><th>Token</th><th>Purpose</th></tr></thead>
+      <tbody><tr><td>background</td><td>Sheet color</td></tr><tr><td>muted</td><td>Secondary text</td></tr></tbody>
+    </table>
+
+    <figure>
+      <svg viewBox="0 0 800 240" role="img" aria-labelledby="figure-title">
+        <title id="figure-title">Color blocks for checking figure layout</title>
+        <rect width="800" height="240" fill="currentColor" opacity="0.08"></rect>
+        <circle cx="260" cy="120" r="70" fill="var(--color-heading-1)"></circle>
+        <circle cx="400" cy="120" r="70" fill="var(--color-heading-2)"></circle>
+        <circle cx="540" cy="120" r="70" fill="var(--color-heading-3)"></circle>
+      </svg>
+      <figcaption>A figure and caption at the full content width.</figcaption>
+    </figure>
+  </article>
+
+  <section>
+    <div class="section-head"><h2>Listing components</h2><a class="rss-badge" href="#">RSS</a></div>
+    <article class="post-entry">
+      <h2><a href="#">A post entry</a></h2>
+      <time datetime="2026-08-30">August 30, 2026</time>
+      <p class="entry-status">draft</p>
+      <p class="entry-summary">A summary shows the rhythm used on section pages.</p>
+      <ul class="tag-list"><li>css</li><li>design</li></ul>
+    </article>
+    <article class="project-entry">
+      <h2><a href="#">A project entry</a></h2>
+      <p>A short project description.</p>
+      <p class="project-status">active</p>
+    </article>
+  </section>
+
+  <section class="contact-panel">
+    <h2>Contact panel</h2>
+    <dl class="contact-list"><dt>email</dt><dd><a href="#">name@example.com</a></dd><dt>source</dt><dd><a href="#">github.com/vetr0s</a></dd></dl>
+  </section>
+</main>
+<footer><p>Standalone CSS specimen.</p></footer>
+</body>
+</html>
