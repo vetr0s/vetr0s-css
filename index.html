@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>vetr0s.css</title>
+<title>css.vetr0s</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
 <script>
   (function () {
     var theme = localStorage.getItem('theme');
@@ -20,18 +21,21 @@
 <body>
 <header>
   <nav class="crumbs" aria-label="Breadcrumb">
-    <p class="trail"><a href="#">vetr0s<span class="accent">.</span>css</a><span class="sep">/</span><span class="here">specimen</span></p>
-    <button id="theme-toggle" type="button" aria-label="Toggle color theme">theme</button>
+    <p class="trail"><a href="/">css<span class="accent">.</span>vetr0s</a><span class="sep">/</span><span class="here">specimen</span></p>
   </nav>
+  <div class="header-rule">
+    <hr>
+    <button id="theme-toggle" type="button" aria-label="Toggle color theme">theme</button>
+  </div>
 </header>
 <main>
   <article>
-    <h1>Type, color, and measure</h1>
+    <h1 id="type-color-and-measure">Type, color, and measure</h1>
     <time datetime="2026-08-30">August 30, 2026</time>
-    <p>This page exercises the selectors used by the site. Refine the CSS here, then review both themes and a narrow viewport.</p>
-    <p>Body copy includes an <a href="#links">ordinary link</a>, <em>italic text</em>, <strong>bold text</strong>, and <code>inline code</code>.</p>
+    <p>This page exercises the selectors used by the site.<input class="margin-toggle" id="sn-1" type="checkbox"><label class="sidenote-number" for="sn-1"></label><span class="sidenote">The measure and the leading are set in rem, so a browser zoom scales the whole page rather than only the text.</span> Refine the CSS here, then review both themes and a narrow viewport.</p>
+    <p>Body copy includes an <a href="#links">ordinary link</a>, <em>italic text</em>, <strong>bold text</strong>, and <code>inline code</code>.<input class="margin-toggle" id="sn-2" type="checkbox"><label class="sidenote-number" for="sn-2"></label><span class="sidenote">One custom property, <code>--color-accent</code>, drives the breadcrumb link, the theme toggle, and these note markers.</span></p>
 
-    <h2 id="links">Article elements</h2>
+    <h2 id="links"><a class="anchor" href="#links">Article elements</a></h2>
     <blockquote><p>A block quote needs enough text to show its inset, border, color, and line length.</p></blockquote>
     <ul>
       <li>An unordered list item</li>
@@ -42,17 +46,18 @@
       <li>Another numbered item</li>
     </ol>
 
-    <h3>Inline disclosure</h3>
-    <p>The note marker opens its content in place.<input class="margin-toggle" id="sn-1" type="checkbox"><label class="sidenote-number" for="sn-1"></label><span class="sidenote">This is the note text. It can contain an <a href="#links">internal link</a>.</span></p>
+    <h3 id="inline-disclosure"><a class="anchor" href="#inline-disclosure">Inline disclosure</a></h3>
+    <p>The note marker opens its content in place.<input class="margin-toggle" id="sn-3" type="checkbox"><label class="sidenote-number" for="sn-3"></label><span class="sidenote">This is the note text. It can contain an <a href="#links">internal link</a>.</span></p>
 
-    <h3>Code</h3>
+    <h3 id="code"><a class="anchor" href="#code">Code</a></h3>
+    <p>A code block keeps its own left rule and no fill.<input class="margin-toggle" id="sn-4" type="checkbox"><label class="sidenote-number" for="sn-4"></label><span class="sidenote">On a wide screen this note sits in the margin. Narrow the window and it folds back inline behind its number.</span></p>
     <pre class="chroma"><code><span class="k">const</span> <span class="nf">greeting</span> = <span class="s">"hello"</span>;
 <span class="c">// Syntax colors follow the active theme.</span></code></pre>
 
-    <h3>Table</h3>
+    <h3 id="table"><a class="anchor" href="#table">Table</a></h3>
     <table>
       <thead><tr><th>Token</th><th>Purpose</th></tr></thead>
-      <tbody><tr><td>background</td><td>Sheet color</td></tr><tr><td>muted</td><td>Secondary text</td></tr></tbody>
+      <tbody><tr><td>background</td><td>Sheet color</td></tr><tr><td>muted</td><td>Secondary text</td></tr><tr><td>accent</td><td>Links and markers</td></tr></tbody>
     </table>
 
     <figure>
@@ -68,7 +73,7 @@
   </article>
 
   <section>
-    <div class="section-head"><h2>Listing components</h2><a class="rss-badge" href="#">RSS</a></div>
+    <div class="section-head"><h2 id="listing-components"><a class="anchor" href="#listing-components">Listing components</a></h2><a class="rss-badge" href="#">RSS</a></div>
     <article class="post-entry">
       <h2><a href="#">A post entry</a></h2>
       <time datetime="2026-08-30">August 30, 2026</time>
