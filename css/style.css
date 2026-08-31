@@ -1,23 +1,18 @@
 /* The whole stylesheet. No build step and no preprocessor.
-   The page is one column inside a centred sheet. Every normal element uses the
-   sheet's full inner width. Spacing is font-relative, so browser zoom scales
-   the whole layout. Colors are the Modus palettes, switched by light-dark()
-   against the user's color-scheme. Footnotes open as inline disclosures at
-   every width.
+   The page is one column set against a left margin, ragged right. Spacing is
+   font-relative, so browser zoom scales the whole layout. Colors are the Modus
+   palettes, switched by light-dark() against the user's color-scheme.
+   Footnotes open as inline disclosures at every width.
    Order below: tokens, base, code, type, layout, nav, notes, figures, lists,
-   tables. */
+   tables.
 
-/* ET Book, Tufte's Bembo digitisation and the face gingerBill.org is set in.
-   Self-hosted from static/font; MIT, notice beside the files.
+   proto/rfc: the datatracker take. System sans, 1rem body, content left
+   aligned in a narrow column. Monochrome text, one blue for links, one
+   magenta on h1 and the wordmark dot. Rules under section headings, metadata
+   in mono, no fills or boxes anywhere. */
 
-   font-display: optional, not the swap that Tufte CSS and gingerBill both
-   use. swap guarantees a visible change: fallback first, then the real face
-   drops in under the reader's eyes. optional instead lets the browser use the
-   face only if it is ready by first paint and skip it for that load
-   otherwise, so the text never reflows mid-sentence. The preload in the head
-   is what makes ready-in-time the usual case, and after one visit it is
-   cached and always is. The cost is that a cold visit on a slow line reads in
-   Palatino, which is a fair thing to fall back to. */
+/* ET Book is kept only so the three @font-face rules still resolve and
+   `make check` passes. It is not the body face in this take. */
 @font-face {
     font-family: "ET Book";
     src: url("/font/et-book-roman-line-figures.woff2") format("woff2");
@@ -46,45 +41,41 @@
 :root {
     color-scheme: light dark;
 
-    /* The sheet. Used on body and nowhere else, which is what lets the dark
-       value sit off pure black: the page below it takes the black instead. */
+    /* Page and sheet are one surface. No fills sit on top of it. */
     --color-bg:           light-dark(#ffffff, #0d0d0d);
-    /* Behind the sheet, at the left and right of the window. The two themes
-       reach the separation from opposite directions. Light dims the page away
-       from the white sheet, Modus bg-dim. Dark cannot dim any further, so it
-       drops the page to true black and lifts the sheet off it instead, which
-       also puts a code block's #1e1e1e a clear step above both. */
-    --color-page:         light-dark(#f0f0f0, #000000);
-    --color-surface:      light-dark(#f2f2f2, #1e1e1e);
+    --color-page:         var(--color-bg);
+    --color-surface:      var(--color-bg);
     --color-text:         light-dark(#000000, #ffffff);
     --color-muted:        light-dark(#595959, #989898);
     --color-border:       light-dark(#c4c4c4, #535353);
     --color-link:         light-dark(#0031a9, #2fafff);
     --color-link-muted:   light-dark(#40588a, #6f91ad);
     --color-link-hover:   light-dark(#005e8b, #00d3d0);
-    --color-heading-1:    light-dark(#884900, #fec43f);
-    --color-heading-2:    light-dark(#721045, #feacd0);
-    --color-heading-3:    light-dark(#005e8b, #00d3d0);
-    --magenta:            light-dark(#721045, #feacd0);
 
-    /* The fallbacks are the same ones Tufte CSS names, and they matter here:
-       under font-display: optional a cold first visit reads in Palatino. */
-    --font-body:  "ET Book", Palatino, "Palatino Linotype", "Palatino LT STD",
-                  "Book Antiqua", Georgia, serif;
+    /* One accent, used sparingly: h1 and the wordmark dot, nothing else.
+       h2 and h3 are text-coloured and lean on a rule instead. */
+    --color-accent:       light-dark(#721045, #feacd0);
+    --color-heading-1:    var(--color-accent);
+    --color-heading-2:    var(--color-text);
+    --color-heading-3:    var(--color-text);
+    --magenta:            var(--color-accent);
+
+    --font-body:  system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+                  sans-serif;
     --font-mono:  ui-monospace, "Hack", "DejaVu Sans Mono", monospace;
 
-    --body-size: 1.25rem;
+    --body-size: 1rem;
 
     --space-xs: 0.35rem;
     --space-sm: 0.7rem;
     --space-md: 1.1rem;
     --space-lg: 1.5rem;
 
-    /* One width owns the page. Every normal child fills its inner width. */
-    --sheet-width: 60rem;
+    /* The reading column and the margin it sits against. */
+    --sheet-width: 46rem;
+    --gutter: clamp(1rem, 6vw, 5rem);
 
-    /* The inset from the sheet edge. Header and footer span the sheet. Only
-       what is inside them is held to this. */
+    /* The inset inside header and footer. */
     --pad: 1.25rem;
 }
 
@@ -97,41 +88,26 @@
 
 /* Base */
 
-/* Left at the browser's size. A reader who wants larger text has zoom. */
 html {
     font-size: 100%;
     -webkit-text-size-adjust: 100%;
-    /* The band at either side of the sheet. On html rather than body so it
-       still paints under overscroll and past the end of a short page. */
     background: var(--color-page);
 }
 
 body {
     font-family: var(--font-body);
-    /* ET Book has a small x-height, so it sets optically smaller than a UI
-       sans at the same size. Tufte CSS answers this with 1.4rem. This page
-       keeps the quieter 1.25rem size. */
     font-size: var(--body-size);
-    /* 400, not the half step the system sans was given. Only the roman and
-       bold cuts are loaded, so anything between them either rounds back to
-       400 or gets synthesised into a smeared fake bold. */
     font-weight: 400;
     color: var(--color-text);
     background: var(--color-bg);
 
-    /* The sheet, centred. reset.css already gives it the window's height, so
-       the column runs edge to edge vertically even on a short page. */
+    /* Left aligned against the gutter, ragged right at the column edge. */
     max-width: var(--sheet-width);
-    margin-inline: auto;
-    border-inline: 1px solid var(--color-border);
-
     margin-block: 0;
+    margin-inline: var(--gutter) auto;
     padding: 0;
-    /* Loose leading spreads the same ink over more page. A paragraph then
-       reads as a grey field rather than a block of white. */
-    line-height: 1.4;
+    line-height: 1.5;
 
-    /* Notes are numbered here, not by the generator. */
     counter-reset: sidenote-counter;
 }
 
@@ -139,29 +115,22 @@ body {
 
 code, pre, kbd, samp {
     font-family: var(--font-mono);
-    font-size: 0.889em;
+    font-size: 0.9em;
 }
 
-/* Smaller than a block's, because inline code is measured against ET Book,
-   whose x-height is small enough that a mono face beside it reads oversized. */
 code {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 3px;
-    padding: 0.05em 0.2em;
-    font-size: 0.8em;
+    padding: 0 0.15em;
+    font-size: 0.875em;
 }
 
 pre {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    padding: 0.75em 0.9em;
+    border-inline-start: 2px solid var(--color-border);
+    padding: 0.2em 0 0.2em 0.9em;
     margin-block: var(--space-sm);
     overflow-x: auto;
     line-height: 1.45;
 }
 
-/* Inside a block, the surface and border belong to the <pre>, not each token. */
 pre code {
     background: none;
     border: 0;
@@ -178,12 +147,12 @@ hr {
 blockquote {
     margin-block: var(--space-sm);
     padding-inline-start: 1em;
-    border-inline-start: 3px solid var(--color-border);
+    border-inline-start: 2px solid var(--color-border);
     color: var(--color-muted);
 }
 
-/* Chroma writes these token classes. The colors are Modus accents. A block
-   reads the same way in either theme. */
+/* Chroma writes these token classes. Kept in colour; a block reads the same
+   way in either theme. */
 .chroma                       { background: none; }
 .chroma .k,  .chroma .kd,
 .chroma .kn, .chroma .kr      { color: light-dark(#5317ac, #b6a0ff); } /* keyword */
@@ -200,37 +169,32 @@ blockquote {
 .chroma .cm, .chroma .cs      { color: var(--color-muted); font-style: italic; }
 .chroma .err                  { color: light-dark(#a60000, #ff8059); }
 
-/* Modular scale, ratio 1.15, anchored to --body-size and not to the root.
-
-   Anchoring to the root was the bug. It counted from 16px while the prose is
-   set at 1.25rem, so the bottom of the scale landed under the text it headed:
-   h4 was 1rem against a 20px body, and h3 was 1.2rem, which is why h3 had to
-   be hand-picked off the scale to clear the prose at all. With the floor at
-   the body size no heading can set smaller than its own paragraphs, and h3 is
-   a scale step again rather than a patch.
-
-   1.15 rather than the 1.2 it climbed at before: the old ratio from the higher
-   anchor puts h1 at 2.16rem, above the browser default this scale is meant to
-   sit one step under. At 1.15 it lands at 1.9rem, 30px against the browser's
-   32, and the steps come out even instead of bunching at the top. */
+/* Headings sit on a shallow scale and lean on a rule, not size, to separate
+   a section from its body. */
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-body);
     line-height: 1.25;
-    margin-block: var(--space-md) var(--space-xs);
+    margin-block: var(--space-lg) var(--space-xs);
     font-weight: 600;
 }
 
 h1 {
-    font-size: 1.9rem;
+    font-size: 1.5rem;
     color: var(--color-heading-1);
     margin-block-start: 0;
+    padding-block-end: 0.15em;
+    border-block-end: 1px solid var(--color-border);
 }
-h2 { font-size: 1.65rem; color: var(--color-heading-2); }
-h3 { font-size: 1.44rem; color: var(--color-heading-3); }
 
-/* The scale defines nothing below h4. h5 and h6 are floored at the body size
-   rather than left to the UA, which would set them at 0.83em and 0.67em and
-   put them back under the prose. */
+h2 {
+    font-size: 1.25rem;
+    color: var(--color-heading-2);
+    padding-block-end: 0.15em;
+    border-block-end: 1px solid var(--color-border);
+}
+
+h3 { font-size: 1.1rem; color: var(--color-heading-3); }
+
 h4, h5, h6 { font-size: var(--body-size); }
 
 p {
@@ -246,15 +210,15 @@ main ul, main ol {
 
 main li { margin-block-end: 0.25em; }
 
-/* Dateline under a post title. */
+/* Dateline under a post title, in mono like an RFC header field. */
 article > time {
     display: block;
+    font-family: var(--font-mono);
     color: var(--color-muted);
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     margin-block-end: var(--space-md);
 }
 
-/* Underlined, the way a link looks when nobody has styled it. */
 a         { color: var(--color-link); text-decoration: underline; }
 a:hover   { color: var(--color-link-hover); text-decoration-style: dashed; }
 
@@ -266,9 +230,6 @@ input:focus-visible + label {
 }
 
 /* Layout */
-
-/* Three bands, stacked inside the sheet. Each spans the sheet's full width,
-   and everything inside stays left aligned. Centring happens once, on body. */
 
 header {
     padding: var(--space-md) var(--pad) var(--space-xs);
@@ -290,7 +251,7 @@ footer {
     padding: var(--space-sm) var(--pad) var(--space-lg);
     border-block-start: 1px solid var(--color-border);
     color: var(--color-muted);
-    font-size: 0.875rem;
+    font-size: 0.8rem;
 }
 
 footer p { margin: 0; }
@@ -331,8 +292,6 @@ footer p { margin: 0; }
     counter-increment: sidenote-counter;
 }
 
-/* The marker takes no leading of its own, so a paragraph with notes sets to
-   the same rhythm as one without. */
 .sidenote-number::after {
     content: counter(sidenote-counter);
     font-size: 0.7em;
@@ -348,7 +307,7 @@ footer p { margin: 0; }
 .sidenote {
     display: none;
     margin-block: 0.25rem var(--space-sm);
-    font-size: 0.78em;
+    font-size: 0.85em;
     line-height: 1.45;
     color: var(--color-muted);
     text-align: left;
@@ -363,7 +322,6 @@ footer p { margin: 0; }
     color: var(--color-link-muted);
 }
 
-/* A note link stays blue without competing with the main text. */
 .sidenote a        { color: var(--color-link-muted); text-decoration: underline; }
 .sidenote a:hover  { color: var(--color-link-hover); }
 
@@ -400,7 +358,6 @@ main p > img { max-width: 24rem; }
 
 .article-hero {
     max-width: 42rem;
-    margin-inline: auto;
 }
 
 .article-hero img {
@@ -410,7 +367,6 @@ main p > img { max-width: 24rem; }
 
 .article-context {
     max-width: 42rem;
-    margin-inline: auto;
     color: var(--color-muted);
     font-size: 0.85em;
 }
@@ -422,14 +378,13 @@ figcaption {
     line-height: 1.4;
 }
 
-/* Sized to the contact list beside it. A taller picture would leave dead
-   space under the list. */
+/* Sized to the contact list beside it. */
 .portrait img {
     display: block;
     width: 7rem;
     max-width: 100%;
     height: auto;
-    border: 1px solid var(--color-border);
+    border: 0;
 }
 
 .contact-panel {
@@ -440,30 +395,26 @@ figcaption {
     margin-block-end: var(--space-md);
 }
 
-/* A heading with the feed link beside it. */
 .section-head {
     display: flex;
     align-items: baseline;
     gap: var(--space-md);
 }
 
-/* Small enough to read as apparatus beside the heading rather than as a call
-   to action competing with it. */
+/* Reads as apparatus beside the heading, not a call to action. */
 .rss-badge {
     flex: none;
+    font-family: var(--font-mono);
     font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--color-muted);
     text-decoration: none;
-    border: 1px solid var(--color-border);
-    border-radius: 3px;
-    padding: 0.2em 0.5em;
 }
 
 .rss-badge:hover {
     color: var(--color-link-hover);
-    border-color: var(--color-link-hover);
     text-decoration: none;
 }
 
@@ -504,14 +455,15 @@ table {
 }
 
 th, td {
-    border: 1px solid var(--color-border);
-    padding: 0.4em 0.7em;
+    border: 0;
+    border-block-end: 1px solid var(--color-border);
+    padding: 0.4em 0.8em 0.4em 0;
     text-align: left;
     vertical-align: top;
 }
 
 th {
-    background: var(--color-surface);
+    border-block-end: 2px solid var(--color-border);
     font-weight: 600;
 }
 
@@ -523,20 +475,23 @@ th {
 
 .post-entry h2 {
     margin-block: 0;
+    border: 0;
+    padding: 0;
 }
 
 .post-entry > time {
     display: block;
+    font-family: var(--font-mono);
     margin-block-start: var(--space-xs);
     color: var(--color-muted);
-    font-size: 0.85em;
+    font-size: 0.8em;
 }
 
 .post-entry > .entry-status {
+    font-family: var(--font-mono);
     margin-block: 0.15em 0;
     color: var(--color-muted);
     font-size: 0.8em;
-    font-style: italic;
 }
 
 .post-entry > .entry-summary {
@@ -549,9 +504,9 @@ th {
     gap: 0.15em 0.7em;
     padding: 0;
     margin-block: 0.15em 0;
+    font-family: var(--font-mono);
     color: var(--color-muted);
     font-size: 0.8em;
-    font-style: italic;
     list-style: none;
 }
 
@@ -574,6 +529,8 @@ th {
 
 .project-entry h2 {
     margin-block: 0;
+    border: 0;
+    padding: 0;
 }
 
 .project-entry p {
@@ -581,9 +538,9 @@ th {
 }
 
 .project-entry .project-status {
+    font-family: var(--font-mono);
     color: var(--color-muted);
     font-size: 0.8em;
-    font-style: italic;
 }
 
 .empty { color: var(--color-muted); }
