@@ -510,6 +510,12 @@ figcaption {
     margin-block-end: var(--space-md);
 }
 
+/* With no portrait, the panel is a single column. */
+.contact-panel:not(:has(.portrait)) {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+}
+
 /* A heading with the feed link beside it. */
 .section-head {
     display: flex;

@@ -30,69 +30,82 @@
 </header>
 <main>
   <article>
-    <h1 id="type-color-and-measure">Type, color, and measure</h1>
+    <h1 id="about">vetr0s.css</h1>
     <time datetime="2026-08-30">August 30, 2026</time>
-    <p>This page exercises the selectors used by the site.<input class="margin-toggle" id="sn-1" type="checkbox"><label class="sidenote-number" for="sn-1"></label><span class="sidenote">The measure and the leading are set in rem, so a browser zoom scales the whole page rather than only the text.</span> Refine the CSS here, then review both themes and a narrow viewport.</p>
-    <p>Body copy includes an <a href="#links">ordinary link</a>, <em>italic text</em>, <strong>bold text</strong>, and <code>inline code</code>.<input class="margin-toggle" id="sn-2" type="checkbox"><label class="sidenote-number" for="sn-2"></label><span class="sidenote">One custom property, <code>--color-accent</code>, drives the breadcrumb link, the theme toggle, and these note markers.</span></p>
+    <p>This is the stylesheet behind the blog at <a href="https://vetr0s.dev">vetr0s.dev</a>, pulled out to stand on its own. It is one file of about six hundred lines, with no build step and no preprocessor.<input class="margin-toggle" id="sn-1" type="checkbox"><label class="sidenote-number" for="sn-1"></label><span class="sidenote">Link <code>css/style.css</code> and <code>css/reset.css</code>, self-host the three ET Book files, and it works.</span> This page is the reference: it uses every element the stylesheet styles, so you can see the whole thing at once.</p>
+    <p>The body face is ET Book, the digitisation of Bembo that Edward Tufte's handouts are set in. Color is the <a href="https://protesilaos.com/emacs/modus-themes">Modus</a> palettes, Operandi in light and Vivendi in dark, switched with the CSS <code>light-dark()</code> function.<input class="margin-toggle" id="sn-2" type="checkbox"><label class="sidenote-number" for="sn-2"></label><span class="sidenote">One custom property, <code>--color-accent</code>, sets the one blue used for links and markers. Change that line and the page follows.</span> The page also respects a saved <em>light</em> or <em>dark</em> choice from the toggle above, and falls back to the operating system otherwise.</p>
 
-    <h2 id="links"><a class="anchor" href="#links">Article elements</a></h2>
-    <blockquote><p>A block quote needs enough text to show its inset, border, color, and line length.</p></blockquote>
+    <h2 id="layout"><a class="anchor" href="#layout">Layout</a></h2>
+    <p>The article sits in a fixed column with a wide left margin that scales with the window. On a roomy screen the footnotes float out into the space on the right.</p>
+    <blockquote><p>A column of text should be wide enough to carry a full clause and narrow enough that the eye finds the start of the next line without hunting for it.</p></blockquote>
+    <p>The layout is lifted from <a href="https://www.gingerbill.org">gingerBill's</a> site, which is where the ET Book face came from too. It does three things:</p>
     <ul>
-      <li>An unordered list item</li>
-      <li>A second item with a longer line for wrapping behavior</li>
+      <li>The measure is capped and the sheet is centred, so the page holds together on a wide monitor.</li>
+      <li>Below that cap the column goes full width and the margin shrinks to a small percentage.</li>
+      <li>Nothing is a raw pixel value; the indent is a share of the viewport, so it grows and shrinks with the window.</li>
     </ul>
+    <p>To drop it into a plain HTML page:</p>
     <ol>
-      <li>A numbered list item</li>
-      <li>Another numbered item</li>
+      <li>Link <code>reset.css</code> then <code>style.css</code> in the head.</li>
+      <li>Copy the <code>font</code> directory and keep the <code>@font-face</code> paths.</li>
+      <li>Add the theme script if you want the toggle; the stylesheet works without it.</li>
     </ol>
 
-    <h3 id="inline-disclosure"><a class="anchor" href="#inline-disclosure">Inline disclosure</a></h3>
-    <p>The note marker opens its content in place.<input class="margin-toggle" id="sn-3" type="checkbox"><label class="sidenote-number" for="sn-3"></label><span class="sidenote">This is the note text. It can contain an <a href="#links">internal link</a>.</span></p>
+    <h3 id="margin-notes"><a class="anchor" href="#margin-notes">Margin notes</a></h3>
+    <p>Footnotes are set as margin notes.<input class="margin-toggle" id="sn-3" type="checkbox"><label class="sidenote-number" for="sn-3"></label><span class="sidenote">Like this one. It needs no script: the marker is a checkbox and a label, and the note is a sibling span.</span> On a wide screen a note sits in the right margin beside its number. Narrow the window and it folds away behind the number until tapped.</p>
 
     <h3 id="code"><a class="anchor" href="#code">Code</a></h3>
-    <p>A code block keeps its own left rule and no fill.<input class="margin-toggle" id="sn-4" type="checkbox"><label class="sidenote-number" for="sn-4"></label><span class="sidenote">On a wide screen this note sits in the margin. Narrow the window and it folds back inline behind its number.</span></p>
+    <p>Code is set in a monospace face in a bordered box, a shade off the page color.<input class="margin-toggle" id="sn-4" type="checkbox"><label class="sidenote-number" for="sn-4"></label><span class="sidenote">Inline <code>code</code> gets the same box at a smaller size, so it reads level with the serif text around it.</span> Syntax highlighting classes follow the Chroma names, so output from Hugo drops in unchanged.</p>
     <pre class="chroma"><code><span class="k">const</span> <span class="nf">greeting</span> = <span class="s">"hello"</span>;
 <span class="c">// Syntax colors follow the active theme.</span></code></pre>
 
-    <h3 id="table"><a class="anchor" href="#table">Table</a></h3>
+    <h3 id="tables"><a class="anchor" href="#tables">Tables</a></h3>
+    <p>Tables are enclosed, ruled between columns, and striped on alternate rows.</p>
     <table>
-      <thead><tr><th>Token</th><th>Purpose</th></tr></thead>
-      <tbody><tr><td>background</td><td>Sheet color</td></tr><tr><td>muted</td><td>Secondary text</td></tr><tr><td>accent</td><td>Links and markers</td></tr></tbody>
+      <thead><tr><th>Token</th><th>Holds</th></tr></thead>
+      <tbody>
+        <tr><td><code>--color-bg</code></td><td>Page and sheet background</td></tr>
+        <tr><td><code>--color-text</code></td><td>Body text</td></tr>
+        <tr><td><code>--color-muted</code></td><td>Datelines, captions, secondary text</td></tr>
+        <tr><td><code>--color-accent</code></td><td>Links, the wordmark dot, note markers</td></tr>
+        <tr><td><code>--color-surface</code></td><td>Code boxes and table stripes</td></tr>
+      </tbody>
     </table>
 
     <figure>
       <svg viewBox="0 0 800 240" role="img" aria-labelledby="figure-title">
-        <title id="figure-title">Color blocks for checking figure layout</title>
+        <title id="figure-title">The accent, link, and muted colors as three discs</title>
         <rect width="800" height="240" fill="currentColor" opacity="0.08"></rect>
-        <circle cx="260" cy="120" r="70" fill="var(--color-heading-1)"></circle>
-        <circle cx="400" cy="120" r="70" fill="var(--color-heading-2)"></circle>
-        <circle cx="540" cy="120" r="70" fill="var(--color-heading-3)"></circle>
+        <circle cx="260" cy="120" r="70" fill="var(--color-accent)"></circle>
+        <circle cx="400" cy="120" r="70" fill="var(--color-link)"></circle>
+        <circle cx="540" cy="120" r="70" fill="var(--color-muted)"></circle>
       </svg>
-      <figcaption>A figure and caption at the full content width.</figcaption>
+      <figcaption>Accent, link, and muted, held to the column width.</figcaption>
     </figure>
   </article>
 
   <section>
-    <div class="section-head"><h2 id="listing-components"><a class="anchor" href="#listing-components">Listing components</a></h2><a class="rss-badge" href="#">RSS</a></div>
+    <div class="section-head"><h2 id="on-the-blog"><a class="anchor" href="#on-the-blog">On the blog</a></h2><a class="rss-badge" href="https://vetr0s.dev/index.xml">RSS</a></div>
+    <p class="section-intro">The same stylesheet renders the article and project indexes on <a href="https://vetr0s.dev">vetr0s.dev</a>. An entry in each list looks like this.</p>
     <article class="post-entry">
-      <h2><a href="#">A post entry</a></h2>
+      <h2><a href="https://vetr0s.dev">Reading on the web without the weight</a></h2>
       <time datetime="2026-08-30">August 30, 2026</time>
-      <p class="entry-status">draft</p>
-      <p class="entry-summary">A summary shows the rhythm used on section pages.</p>
-      <ul class="tag-list"><li>css</li><li>design</li></ul>
+      <p class="entry-status">published</p>
+      <p class="entry-summary">Notes on cutting a personal site down to type, one column, and two colors.</p>
+      <ul class="tag-list"><li>css</li><li>typography</li></ul>
     </article>
     <article class="project-entry">
-      <h2><a href="#">A project entry</a></h2>
-      <p>A short project description.</p>
+      <h2><a href="https://github.com/vetr0s/vetr0s-css">vetr0s.css</a></h2>
+      <p>This stylesheet, as a standalone repository.</p>
       <p class="project-status">active</p>
     </article>
   </section>
 
   <section class="contact-panel">
-    <h2>Contact panel</h2>
-    <dl class="contact-list"><dt>email</dt><dd><a href="#">name@example.com</a></dd><dt>source</dt><dd><a href="#">github.com/vetr0s</a></dd></dl>
+    <h2>Elsewhere</h2>
+    <dl class="contact-list"><dt>blog</dt><dd><a href="https://vetr0s.dev">vetr0s.dev</a></dd><dt>source</dt><dd><a href="https://github.com/vetr0s/vetr0s-css">github.com/vetr0s/vetr0s-css</a></dd></dl>
   </section>
 </main>
-<footer><p>Standalone CSS specimen.</p></footer>
+<footer><p>vetr0s.css. Built alongside vetr0s.dev and released into the public domain.</p></footer>
 </body>
 </html>
