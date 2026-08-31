@@ -9,14 +9,24 @@ fonts = (
     "font/et-book-bold-line-figures.woff2",
 )
 
+icons = (
+    "favicon.ico",
+    "favicon-16x16.png",
+    "favicon-32x32.png",
+    "apple-touch-icon.png",
+    "android-chrome-192x192.png",
+    "android-chrome-512x512.png",
+    "site.webmanifest",
+)
+
 required = (
     "index.html",
     "css/reset.css",
     "css/style.css",
     "js/theme.js",
-    "favicon.ico",
     "CNAME",
     "font/LICENSE-et-book.txt",
+    *icons,
     *fonts,
 )
 
@@ -31,7 +41,14 @@ for font in fonts:
         raise SystemExit(f"style.css does not reference {url}")
 
 fixture = (root / "index.html").read_text()
-for asset in ("/css/reset.css", "/css/style.css", "/js/theme.js", "/favicon.ico"):
+loaded = (
+    "/css/reset.css",
+    "/css/style.css",
+    "/js/theme.js",
+    "/favicon.ico",
+    "/site.webmanifest",
+)
+for asset in loaded:
     if asset not in fixture:
         raise SystemExit(f"index.html does not load {asset}")
 
